@@ -56,7 +56,11 @@ SELECT COUNT(DISTINCT last_name) AS distinct_last_names FROM actor;
 
 #Exercise 6: Retrieve the 10 longest films.
 
-SELECT  lenght  FROM film;
+
+SELECT title, length
+FROM film
+ORDER BY length DESC
+LIMIT 10;
 
 #Exercise 7: Use filtering techniques in order to:
 
