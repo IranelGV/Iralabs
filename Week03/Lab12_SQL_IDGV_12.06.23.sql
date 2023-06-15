@@ -89,8 +89,7 @@ HAVING mean_duration > 120;
 
 #4 Determine which last names are not repeated in the table actor.
 
-SELECT DISTINCT(last_name)
-from actor
+
 
 
 SELECT last_name
