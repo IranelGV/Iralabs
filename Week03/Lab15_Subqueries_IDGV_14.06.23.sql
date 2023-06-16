@@ -74,11 +74,34 @@ where address_id in (SELECT address_id
 #First, you will need to find the most prolific actor and then use that actor_id 
 #to find the different films that he or she starred in.
 
-SELECT actor_id as prolific_actor
-from actor
-where film_id in (SELECT film_id
-				  from film
-				  where actor_id = mode(actor_id));
+select film.title
+from film
+join film_actor
+on film.film_id = film_actor.film_id
+join actor
+on actor.actor_id = film_actor.actor_id
+where actor.actor_id = 
+(select actor_id
+from film_actor
+group by actor_id
+order by count(actor_id) DESC
+limit 1);
+
+
+
+
+
+select film.title
+from film
+where film_id in (select film_id
+				  from film_actor
+				  where actor_id = (select actor_id
+									from actor
+									group by actor_id
+									order by count(actor_id)
+									limit 1));
+                                    
+                                    
                   
                   
 
@@ -86,7 +109,53 @@ where film_id in (SELECT film_id
 #You can use the customer and payment tables to find the most profitable customer, 
 #i.e., the customer who has made the largest sum of payments.
 
-Select film
+Select film.title
+from film
+join inventory using(film_id)
+join rental using (inventory_id)
+join customer using (customer_id)
+where customer.customer_id =
+(select customer.customer_id
+from customer
+join payment using (customer_id)
+group by customer_id
+order by sum(payment.amount) DESC
+LIMIT 1);
+
+#################################################################################
+Select film.title
+from film
+where film_id in (select film_id
+				  from inventory
+                  where inventory_id in (select inventory_id
+										  from rental
+										  where customer_id in (select customer_id
+                                                                from customer
+																where customer_id =  (select customer_id
+																					   from payment
+                                                                                       group by customer_id
+																					   order by sum(payment.amount) desc
+																					   limit 1))));
+																					   
+																						
+                                                                
+                                                                                                
+
+###########################################################
+Select film.title
+from film
+where film_id in (select film_id
+				  from inventory
+                  where inventory_id in (select inventory_id
+										  from rental
+										  where customer_id in (select customer_id
+                                                                from customer
+																where customer.customer_id in  (select customer.customer_id
+                                                                                                from customer
+																		                        where customer_id in (select customer_id
+																								                      group by customer_id
+																								                      order by sum(payment.amount) desc
+																													  limit 1)))));
 
 
 
