@@ -67,6 +67,16 @@ WHERE departments.id IN (SELECT sales.department_id
  #The VIEW must be called members_approved_for_voucher. 
 #Create a SELECT query using this view that extracts the expected results.
 
+
+CREATE VIEW View_Products AS
+SELECT ProductName, Price, Category
+FROM Products
+WHERE Price >1000;
+
+
+
+#######################################################
+
 CREATE VIEW members_approved_for_voucher AS
 SELECT members.id, members.name, members.email, SUM(products.price) as total_spending
 FROM sales
@@ -82,3 +92,75 @@ GROUP BY members.id, members.name, members.email
 HAVING SUM(products.price) > 1000.00
 ORDER BY members.id;
 SELECT * FROM members_approved_for_voucher;
+
+
+
+##############################################################
+
+CREATE VIEW members_approved_for_voucher AS
+SELECT members.id, members.name, members.email, SUM(products.price) as total_spending
+FROM sales
+JOIN products ON sales.product_id = products.id
+JOIN members ON sales.member_id = members.id
+WHERE sales.department_id IN (SELECT departments.id
+                              FROM sales
+							  JOIN departments ON sales.department_id = departments.id
+                              JOIN products ON sales.product_id = products.id
+							  GROUP BY departments.id
+							  HAVING SUM(products.price) > 10000.00)
+
+GROUP BY members.id, members.name, members.email
+HAVING SUM(products.price) > 1000.00
+ORDER BY members.id;
+                             
+                             
+SELECT * FROM members_approved_for_voucher;
+
+###########################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
