@@ -1,0 +1,26 @@
+inventory = {
+    'apple': 5,
+    'banana': 10,
+    'orange': 8,
+}
+
+customer_orders = set()
+
+while True:
+    product_name = input("Enter the name of a product would you like to order: ")
+
+    customer_orders.add(product_name)
+
+    add_another = input("Do you want to add another product? (yes/no): ")
+
+    if add_another.lower() != 'yes':
+        break
+
+for product in customer_orders:
+    
+    if product in inventory:
+        inventory[product] -= 1
+
+
+print("Customer Orders:", customer_orders)
+print("Updated Inventory:", inventory)
